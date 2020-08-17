@@ -1,26 +1,33 @@
 
-sort:
-	pop ax 			;return Address of Subrouitne 
-	pop si 			;base address of Array 
-	pop cx 			;counter register 
-	push ax 		
+; SUBROUITNE TO PERFORM SELECTION SORT 
+SELSORT:
+	POP AX 
+	POP SI 
+	POP CX 
+	PUSH AX 
 
-	mov es:[0x4500],si 	;temp storage of regsiter 
-	mov es:[0x4502],cx 	
-	mov es:[0x4504],cx 	;upper counter 
-	xor ax,ax		;clear register 
+	XOR AX,AX 						;CLEAR REGISTERS	 
+	XOR BX,BX 
 
-repeat_sort:
-	mov ah,[si]
-	cmp ah,[si+1]
-	jc notswap_sort
-		xchg ah,[si+1]
-		mov [si],ah 
-	notswap_sort:
-	inc si 
-	loopnz repeat_sort
-	mov cx,es:[0x4502]
-	mov si,es:[0x4500]
-	dec es:[0x4504]
-	jnc repeat_sort
-	ret
+REPEAT2_SELSORT:	
+	CMP BX,CX 
+	JNE SKIP1_SELSORT
+	MOV DX,BX 
+	MOV AH,[SI+BX]
+
+REPEAT1_SELSORT:
+	CMP DX,CX 
+	JNE SKIP2_SELSORT
+
+	CMP AH,[SI+BX+DX]
+	JC NOSWAP_SELSORT
+	XCHG AH,[SI+BX+DX]
+	MOV [SI+BX+DX],AH 
+NOSWAP_SELSORT:
+	INC DX 
+	JMP REPEAT1_SELSORT
+	MOV DX,BX 
+	INC BX 
+	JMP REPEAT2_SELSORT
+SKIP1_SELSORT:
+	RET 
